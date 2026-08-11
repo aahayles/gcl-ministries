@@ -660,7 +660,7 @@
       border-color: rgba(209,159,39,0.4);
     }
 
-    .social-btn svg { width: 14px; height: 14px; fill: var(--gold-dim); }
+    .social-btn svg { width: 14px; height: 14px; fill: var(--gold-dim); stroke: var(--gold-dim); }
 
     .footer-col h4 {
       font-family: 'Cinzel', serif;
@@ -918,7 +918,14 @@
       <h2 class="section-title fade-in">Submit a Prayer Request</h2>
       <div class="prayer-inner fade-in">
         <p class="prayer-intro">We believe in the power of prayer. Share your request with us and our prayer team will lift you up in prayer.</p>
-        <form onsubmit="handlePrayerSubmit(event)">
+        <!-- 
+            FORMSPREE SETUP:
+            1. Go to https://formspree.io and sign up for free
+            2. Create a form, set the notification email to: godcannotlieministries@yahoo.com
+            3. Replace YOUR_PRAYER_FORM_ID below with your actual Formspree form ID
+          -->
+          <form action="https://formspree.io/f/YOUR_PRAYER_FORM_ID" method="POST" onsubmit="handleSubmit(event, 'prayer-success')">
+            <input type="hidden" name="_subject" value="New Prayer Request - GCL Ministries">
           <div class="form-group">
             <label for="prayer-name">Your Name (Optional)</label>
             <input type="text" id="prayer-name" name="prayer-name" placeholder="Your name">
@@ -974,14 +981,21 @@
               <a href="http://www.youtube.com/channel/UCCiVzrxhbXI34x8fAq1f82w" target="_blank" class="social-btn" aria-label="YouTube">
                 <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47a2.78 2.78 0 0 0-1.95 1.95C1 8.12 1 12 1 12s0 3.88.46 5.58a2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95C23 15.88 23 12 23 12s0-3.88-.46-5.58zM10 15.5v-7l6 3.5-6 3.5z"/></svg>
               </a>
-              <a href="http://www.twitter.com/godcannotlie" target="_blank" class="social-btn" aria-label="Twitter">
-                <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+              <a href="https://www.instagram.com/godcannotlie?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="social-btn" aria-label="Instagram">
+                <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>
               </a>
             </div>
           </div>
         </div>
         <div class="fade-in">
-          <form onsubmit="handleSubmit(event)">
+          <!-- 
+            FORMSPREE SETUP:
+            1. Go to https://formspree.io and sign up for free
+            2. Create a new form and set the email to: godcannotlieministries@yahoo.com
+            3. Replace YOUR_CONTACT_FORM_ID below with your actual Formspree form ID
+          -->
+          <form action="https://formspree.io/f/YOUR_CONTACT_FORM_ID" method="POST" onsubmit="handleSubmit(event, 'form-success')">
+            <input type="hidden" name="_subject" value="New Contact from GCL Ministries Website">
             <div class="form-group">
               <label for="name">Full Name</label>
               <input type="text" id="name" name="name" placeholder="Your name" required>
@@ -1031,8 +1045,8 @@
           <a href="http://www.youtube.com/channel/UCCiVzrxhbXI34x8fAq1f82w" target="_blank" class="social-btn" aria-label="YouTube">
             <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47a2.78 2.78 0 0 0-1.95 1.95C1 8.12 1 12 1 12s0 3.88.46 5.58a2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95C23 15.88 23 12 23 12s0-3.88-.46-5.58zM10 15.5v-7l6 3.5-6 3.5z"/></svg>
           </a>
-          <a href="http://www.twitter.com/godcannotlie" target="_blank" class="social-btn" aria-label="Twitter">
-            <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+          <a href="https://www.instagram.com/godcannotlie?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="social-btn" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>
           </a>
         </div>
       </div>
@@ -1081,11 +1095,23 @@
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    // Form submit (basic — no backend yet)
-    function handleSubmit(e) {
-      e.preventDefault();
-      document.getElementById('form-success').style.display = 'block';
-      e.target.reset();
+    // Form submit — shows success message, Formspree handles the actual email delivery
+    function handleSubmit(e, successId) {
+      // Let Formspree submit normally (don't preventDefault) unless IDs are still placeholders
+      const form = e.target;
+      const action = form.getAttribute('action') || '';
+      if (action.includes('YOUR_')) {
+        // Placeholder ID — prevent real submit and just show message
+        e.preventDefault();
+        document.getElementById(successId).style.display = 'block';
+        form.reset();
+      } else {
+        // Real Formspree ID — show message after a moment (form will POST normally)
+        setTimeout(() => {
+          document.getElementById(successId).style.display = 'block';
+          form.reset();
+        }, 500);
+      }
     }
 
     // Prayer form submit

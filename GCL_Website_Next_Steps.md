@@ -28,6 +28,27 @@
   ```
 - [x] Website accessible at: `http://localhost:8080/GCL_Website.html`
 
+### GitHub Deployment
+- [x] Git 2.55.0 installed
+- [x] GitHub CLI 2.97.0 installed
+- [x] Git configured with:
+  - Name: `Allen Hayles-Tyme`
+  - Email: `haylestymeallen@gmail.com`
+- [x] Repository created: [aahayles/gcl-ministries](https://github.com/aahayles/gcl-ministries)
+- [x] All project files committed and pushed to GitHub
+- [x] `index.html` added (copy of `GCL_Website.html`) so GitHub Pages loads correctly
+- [x] GitHub Pages enabled — site live at: **https://aahayles.github.io/gcl-ministries/**
+- [x] To find the live link on GitHub: **Settings → Pages → "Your site is live at..."**
+
+#### Updating the site going forward
+After making changes to any file, run these commands in the terminal:
+```bash
+git add .
+git commit -m "describe your change here"
+git push
+```
+GitHub Pages will automatically rebuild and update the live site within 1-2 minutes.
+
 ### PDF to DOC Skill
 - [x] Skill created at `C:\Users\hayle\.kiro\skills\pdf-to-doc.md`
 - [x] `pdf2docx` Python library installed
@@ -120,12 +141,23 @@ The logo appears in 3 places on the site:
 | File | Description |
 |------|-------------|
 | `GCL_Website.html` | Main website file |
+| `index.html` | Copy of GCL_Website.html — required for GitHub Pages homepage |
 | `gcl-logo.png` | Church logo (place in same folder) |
 | `convert_pdf.py` | Script to convert PDF files to Word docs |
 | `FIT_financial_integrity_training_worksheet_branded_income_added.pdf` | Original FIT worksheet PDF |
 | `FIT_financial_integrity_training_worksheet_formatted.docx` | Converted Word version |
 | `FIT_Financial_Worksheet.md` | Markdown version of the FIT worksheet |
 | `GCL_Website_Next_Steps.md` | This file |
+
+---
+
+## 🌐 GitHub & Hosting Links
+
+| Resource | URL |
+|----------|-----|
+| GitHub Repository | https://github.com/aahayles/gcl-ministries |
+| Live Website (GitHub Pages) | https://aahayles.github.io/gcl-ministries/ |
+| GitHub Pages Settings | https://github.com/aahayles/gcl-ministries/settings/pages |
 
 ---
 

@@ -83,6 +83,9 @@
     const uploadMessage = document.getElementById('upload-message');
     const photoGrid = document.getElementById('photo-grid');
     const photoStatus = document.getElementById('photo-status');
+    const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
+    let inactivityTimer;
+    let activeSession = false;
 
     function isAdmin(user) { return user?.app_metadata?.role === 'admin'; }
     function safeFileName(name) {
@@ -94,6 +97,8 @@
     async function showSession(session) {
       const user = session?.user;
       if (!user || !isAdmin(user)) {
+        activeSession = false;
+        window.clearTimeout(inactivityTimer);
         if (user) await supabase.auth.signOut();
         loginPanel.hidden = false;
         dashboard.hidden = true;
@@ -102,8 +107,26 @@
       }
       loginPanel.hidden = true;
       dashboard.hidden = false;
+      activeSession = true;
+      resetInactivityTimer();
       document.getElementById('signed-in-as').textContent = `Signed in as ${user.email}`;
       await loadPhotos();
+    }
+
+    async function endAdminSession(reason = 'signedout') {
+      activeSession = false;
+      window.clearTimeout(inactivityTimer);
+      try {
+        await supabase.auth.signOut({ scope: 'local' });
+      } finally {
+        window.location.replace(`admin.html?reason=${encodeURIComponent(reason)}`);
+      }
+    }
+
+    function resetInactivityTimer() {
+      if (!activeSession) return;
+      window.clearTimeout(inactivityTimer);
+      inactivityTimer = window.setTimeout(() => endAdminSession('inactive'), INACTIVITY_LIMIT_MS);
     }
 
     async function loadPhotos() {
@@ -158,9 +181,15 @@
       uploadForm.reset(); button.disabled = false; await loadPhotos();
     });
 
-    document.getElementById('sign-out').addEventListener('click', async () => { await supabase.auth.signOut(); location.reload(); });
+    document.getElementById('sign-out').addEventListener('click', () => endAdminSession('signedout'));
     document.getElementById('refresh').addEventListener('click', loadPhotos);
+    ['pointerdown', 'keydown', 'touchstart', 'focus'].forEach((eventName) => {
+      window.addEventListener(eventName, resetInactivityTimer, { passive: true });
+    });
     supabase.auth.onAuthStateChange((_event, session) => { window.setTimeout(() => showSession(session), 0); });
+    const reason = new URLSearchParams(window.location.search).get('reason');
+    if (reason === 'inactive') loginMessage.textContent = 'For your security, you were signed out after 5 minutes of inactivity.';
+    if (reason === 'signedout') loginMessage.textContent = 'You have been signed out securely.';
     const { data:{ session } } = await supabase.auth.getSession(); await showSession(session);
   </script>
 </body>

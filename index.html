@@ -1153,7 +1153,11 @@
               <label for="phone">Phone Number</label>
               <input type="tel" id="phone" name="Phone" placeholder="(704) 000-0000" autocomplete="tel">
             </div>
-            <button id="contact-submit" type="submit" class="btn-gold" style="margin-top:8px;width:100%;text-align:center;">Send Contact Information</button>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="Message" placeholder="How can we help you?" required minlength="10"></textarea>
+            </div>
+            <button id="contact-submit" type="submit" class="btn-gold" style="margin-top:8px;width:100%;text-align:center;">Send Message</button>
             <p id="contact-status" style="display:none;color:var(--gold);font-size:13px;margin-top:12px;text-align:center;" role="status" aria-live="polite"></p>
           </form>
         </div>
@@ -1313,7 +1317,7 @@
       button.textContent = 'Sending…';
       status.style.display = 'block';
       status.style.color = 'var(--text-muted)';
-      status.textContent = 'Securely sending your contact information…';
+      status.textContent = 'Securely sending your message…';
 
       try {
         const response = await fetch(form.action, {
@@ -1325,14 +1329,14 @@
         if (!response.ok || result.success === false) throw new Error('Submission failed');
 
         status.style.color = 'var(--gold)';
-        status.textContent = 'Thank you! Your contact information was sent, and our ministry team will be in touch.';
+        status.textContent = 'Thank you! Your message was sent, and our ministry team will be in touch.';
         form.reset();
       } catch (error) {
         status.style.color = '#ffb4b4';
         status.textContent = 'We could not send your information right now. Please try again or call 704-292-6985.';
       } finally {
         button.disabled = false;
-        button.textContent = 'Send Contact Information';
+        button.textContent = 'Send Message';
       }
     }
 

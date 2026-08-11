@@ -54,19 +54,19 @@
       </div>
       <iframe id="facebook-live-player" title="GCL Ministries Facebook livestream" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
     </section>
-    <p class="status"><span class="pulse"></span><span id="check-status">Checking the GCL Facebook page for a live broadcast…</span></p>
+    <p class="status"><span class="pulse"></span><span id="check-status">LIVE NOW · Streaming from the GCL Facebook page</span></p>
     <div class="actions">
       <a class="button primary" href="https://www.facebook.com/godcannotlieministries/live" target="_blank" rel="noopener noreferrer">Open Live on Facebook</a>
       <a class="button" href="index.html#contact">Contact the Ministry</a>
     </div>
   </main>
   <script>
-    const PAGE_LIVE_URL = 'https://www.facebook.com/godcannotlieministries/live';
+    const PAGE_LIVE_URL = 'https://www.facebook.com/100064739497462/videos/975041372262547';
     const player = document.getElementById('facebook-live-player');
     const status = document.getElementById('check-status');
 
     function refreshFacebookPlayer() {
-      status.textContent = 'Checking the GCL Facebook page for a live broadcast…';
+      status.textContent = 'LIVE NOW · Streaming from the GCL Facebook page';
       const pluginUrl = new URL('https://www.facebook.com/plugins/video.php');
       pluginUrl.searchParams.set('href', PAGE_LIVE_URL);
       pluginUrl.searchParams.set('show_text', 'false');
@@ -74,7 +74,6 @@
       pluginUrl.searchParams.set('allowfullscreen', 'true');
       pluginUrl.searchParams.set('t', Date.now().toString());
       player.src = pluginUrl.toString();
-      window.setTimeout(() => { status.textContent = 'Waiting for the next broadcast · checking automatically every minute'; }, 8000);
     }
 
     refreshFacebookPlayer();

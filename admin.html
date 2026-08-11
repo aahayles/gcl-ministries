@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Gallery Admin | GCL Ministries</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --navy:#132045; --dark:#0c1730; --gold:#d19f27; --light:#f5f2ec; --muted:#8a9db5; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; font-family:Lato,sans-serif; background:radial-gradient(circle at top, #1a2e55, var(--dark) 55%); color:white; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px clamp(20px,5vw,64px); border-bottom:1px solid rgba(209,159,39,.25); background:rgba(12,23,48,.94); }
+    .brand { display:flex; align-items:center; gap:14px; color:var(--gold); font:600 13px Cinzel,serif; letter-spacing:1px; text-decoration:none; }
+    .brand img { width:44px; height:44px; border-radius:50%; object-fit:cover; }
+    a { color:var(--gold); }
+    main { width:min(980px, calc(100% - 40px)); margin:48px auto; }
+    .panel { background:rgba(19,32,69,.92); border:1px solid rgba(209,159,39,.25); border-radius:12px; padding:clamp(24px,5vw,48px); box-shadow:0 20px 70px rgba(0,0,0,.3); }
+    h1,h2 { margin-top:0; font-family:Cinzel,serif; font-weight:500; color:var(--gold); }
+    p { color:var(--muted); line-height:1.7; }
+    form { display:grid; gap:18px; }
+    label { display:grid; gap:8px; font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--light); }
+    input { width:100%; padding:14px 16px; border:1px solid rgba(209,159,39,.35); border-radius:4px; background:var(--dark); color:white; font:inherit; }
+    input:focus { outline:2px solid var(--gold); outline-offset:2px; }
+    button { border:0; border-radius:4px; padding:13px 20px; background:var(--gold); color:var(--dark); font:600 12px Cinzel,serif; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+    button:disabled { opacity:.55; cursor:wait; }
+    button.secondary { background:transparent; color:var(--gold); border:1px solid var(--gold); }
+    button.danger { background:#9d3540; color:white; }
+    .row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; }
+    .message { min-height:24px; margin:14px 0 0; color:var(--gold); }
+    #dashboard[hidden], #login-panel[hidden] { display:none; }
+    .upload-box { margin:28px 0; padding:24px; border:1px dashed rgba(209,159,39,.55); border-radius:8px; }
+    .photo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:18px; margin-top:24px; }
+    .photo-card { overflow:hidden; border:1px solid rgba(209,159,39,.25); border-radius:8px; background:var(--dark); }
+    .photo-card img { display:block; width:100%; aspect-ratio:4/3; object-fit:cover; }
+    .photo-card footer { padding:12px; }
+    .photo-name { overflow:hidden; margin:0 0 10px; text-overflow:ellipsis; white-space:nowrap; font-size:12px; color:var(--muted); }
+    .photo-card button { width:100%; padding:10px; }
+    @media (max-width:600px) { header { align-items:flex-start; } .brand span { max-width:160px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="index.html"><img src="gcl-logo.png" alt=""><span>GCL Ministries Gallery Admin</span></a>
+    <a href="index.html#gallery">View gallery</a>
+  </header>
+  <main>
+    <section class="panel" id="login-panel">
+      <h1>Admin Sign In</h1>
+      <p>Authorized ministry administrators may upload or remove public gallery photos.</p>
+      <form id="login-form">
+        <label>Email address<input id="email" type="email" autocomplete="username" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" required minlength="8"></label>
+        <button type="submit">Sign In</button>
+      </form>
+      <p class="message" id="login-message" role="status"></p>
+    </section>
+
+    <section class="panel" id="dashboard" hidden>
+      <div class="row"><div><h1>Photo Gallery</h1><p id="signed-in-as"></p></div><button class="secondary" id="sign-out" type="button">Sign Out</button></div>
+      <form class="upload-box" id="upload-form">
+        <h2>Add Photos</h2>
+        <label>Choose JPG, PNG, WebP, or GIF files (10 MB maximum each)
+          <input id="photo-files" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple required>
+        </label>
+        <button type="submit">Upload Selected Photos</button>
+        <p class="message" id="upload-message" role="status"></p>
+      </form>
+      <div class="row"><h2>Published Photos</h2><button class="secondary" id="refresh" type="button">Refresh</button></div>
+      <p id="photo-status">Loading photos…</p>
+      <div class="photo-grid" id="photo-grid"></div>
+    </section>
+  </main>
+  <script type="module">
+    import { supabase, GALLERY_BUCKET } from './supabase-client.js';
+
+    const loginPanel = document.getElementById('login-panel');
+    const dashboard = document.getElementById('dashboard');
+    const loginForm = document.getElementById('login-form');
+    const uploadForm = document.getElementById('upload-form');
+    const loginMessage = document.getElementById('login-message');
+    const uploadMessage = document.getElementById('upload-message');
+    const photoGrid = document.getElementById('photo-grid');
+    const photoStatus = document.getElementById('photo-status');
+
+    function isAdmin(user) { return user?.app_metadata?.role === 'admin'; }
+    function safeFileName(name) {
+      const extension = name.includes('.') ? `.${name.split('.').pop().toLowerCase()}` : '';
+      const stem = name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'photo';
+      return `${Date.now()}-${crypto.randomUUID()}-${stem}${extension}`;
+    }
+
+    async function showSession(session) {
+      const user = session?.user;
+      if (!user || !isAdmin(user)) {
+        if (user) await supabase.auth.signOut();
+        loginPanel.hidden = false;
+        dashboard.hidden = true;
+        if (user) loginMessage.textContent = 'This account does not have gallery administrator access.';
+        return;
+      }
+      loginPanel.hidden = true;
+      dashboard.hidden = false;
+      document.getElementById('signed-in-as').textContent = `Signed in as ${user.email}`;
+      await loadPhotos();
+    }
+
+    async function loadPhotos() {
+      photoStatus.textContent = 'Loading photos…';
+      photoGrid.replaceChildren();
+      const { data, error } = await supabase.storage.from(GALLERY_BUCKET).list('', { limit:100, sortBy:{ column:'created_at', order:'desc' } });
+      if (error) { photoStatus.textContent = error.message; return; }
+      const photos = data.filter((item) => item.id && !item.name.startsWith('.'));
+      photoStatus.textContent = photos.length ? `${photos.length} photo${photos.length === 1 ? '' : 's'} published` : 'No photos published yet.';
+      photos.forEach((photo) => {
+        const { data:url } = supabase.storage.from(GALLERY_BUCKET).getPublicUrl(photo.name);
+        const card = document.createElement('article'); card.className = 'photo-card';
+        const image = document.createElement('img'); image.src = url.publicUrl; image.alt = ''; image.loading = 'lazy';
+        const footer = document.createElement('footer');
+        const name = document.createElement('p'); name.className = 'photo-name'; name.textContent = photo.name;
+        const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'danger'; remove.textContent = 'Delete';
+        remove.addEventListener('click', async () => {
+          if (!window.confirm('Delete this photo from the public gallery?')) return;
+          remove.disabled = true;
+          const { error:deleteError } = await supabase.storage.from(GALLERY_BUCKET).remove([photo.name]);
+          if (deleteError) { uploadMessage.textContent = deleteError.message; remove.disabled = false; return; }
+          uploadMessage.textContent = 'Photo deleted.'; await loadPhotos();
+        });
+        footer.append(name, remove); card.append(image, footer); photoGrid.appendChild(card);
+      });
+    }
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); loginMessage.textContent = 'Signing in…';
+      const button = loginForm.querySelector('button'); button.disabled = true;
+      const { data, error } = await supabase.auth.signInWithPassword({ email:document.getElementById('email').value.trim(), password:document.getElementById('password').value });
+      button.disabled = false;
+      if (error) { loginMessage.textContent = 'Sign-in failed. Check your email and password.'; return; }
+      loginMessage.textContent = ''; await showSession(data.session);
+    });
+
+    uploadForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const files = [...document.getElementById('photo-files').files];
+      if (!files.length) return;
+      const invalid = files.find((file) => file.size > 10 * 1024 * 1024 || !['image/jpeg','image/png','image/webp','image/gif'].includes(file.type));
+      if (invalid) { uploadMessage.textContent = `${invalid.name} is not an accepted image under 10 MB.`; return; }
+      const button = uploadForm.querySelector('button'); button.disabled = true;
+      let uploaded = 0;
+      for (const file of files) {
+        uploadMessage.textContent = `Uploading ${uploaded + 1} of ${files.length}…`;
+        const { error } = await supabase.storage.from(GALLERY_BUCKET).upload(safeFileName(file.name), file, { cacheControl:'3600', contentType:file.type, upsert:false });
+        if (error) { uploadMessage.textContent = `Upload stopped: ${error.message}`; button.disabled = false; return; }
+        uploaded += 1;
+      }
+      uploadMessage.textContent = `${uploaded} photo${uploaded === 1 ? '' : 's'} published successfully.`;
+      uploadForm.reset(); button.disabled = false; await loadPhotos();
+    });
+
+    document.getElementById('sign-out').addEventListener('click', async () => { await supabase.auth.signOut(); location.reload(); });
+    document.getElementById('refresh').addEventListener('click', loadPhotos);
+    supabase.auth.onAuthStateChange((_event, session) => { window.setTimeout(() => showSession(session), 0); });
+    const { data:{ session } } = await supabase.auth.getSession(); await showSession(session);
+  </script>
+</body>
+</html>

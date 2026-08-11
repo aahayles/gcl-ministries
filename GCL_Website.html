@@ -506,6 +506,25 @@
       flex-wrap: wrap;
     }
 
+    /* ===== PHOTO GALLERY ===== */
+    .gallery-sec { background: var(--navy-dark); }
+    .gallery-intro { max-width: 620px; margin: -20px auto 36px; color: var(--text-muted); line-height: 1.8; text-align: center; }
+    .gallery-shell { position: relative; max-width: 980px; margin: 0 auto; }
+    .gallery-stage { position: relative; min-height: 320px; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid rgba(209,159,39,.3); border-radius: 8px; background: var(--navy); box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+    .gallery-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .8s ease; }
+    .gallery-slide.active { opacity: 1; z-index: 1; }
+    .gallery-slide img { width: 100%; height: 100%; object-fit: contain; background: #080f22; }
+    .gallery-empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 30px; color: var(--text-muted); text-align: center; }
+    .gallery-empty[hidden] { display: none; }
+    .gallery-control { position: absolute; top: 50%; z-index: 3; width: 46px; height: 46px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: rgba(12,23,48,.8); color: var(--gold); font-size: 24px; cursor: pointer; transform: translateY(-50%); backdrop-filter: blur(8px); }
+    .gallery-control:hover { background: var(--gold); color: var(--navy-dark); }
+    .gallery-control.previous { left: 16px; }
+    .gallery-control.next { right: 16px; }
+    .gallery-dots { display: flex; justify-content: center; gap: 9px; min-height: 12px; margin-top: 20px; }
+    .gallery-dot { width: 9px; height: 9px; padding: 0; border: 1px solid var(--gold); border-radius: 50%; background: transparent; cursor: pointer; }
+    .gallery-dot.active { background: var(--gold); }
+    .gallery-status { min-height: 22px; margin-top: 14px; color: var(--text-muted); font-size: 13px; text-align: center; }
+
     .chip {
       font-size: 12px;
       color: var(--gold-dim);
@@ -733,6 +752,8 @@
 
     @media (max-width: 480px) {
       .footer-grid { grid-template-columns: 1fr; }
+      .gallery-stage { min-height: 230px; aspect-ratio: 4 / 3; }
+      .gallery-control { width: 40px; height: 40px; }
       .nav-wordmark { font-size: 10px; }
     }
   </style>
@@ -751,6 +772,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#vision">Vision</a></li>
       <li><a href="#pastor">Pastor</a></li>
+      <li><a href="#gallery">Gallery</a></li>
       <li><a href="#prayer">Prayer</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -764,6 +786,7 @@
     <a href="#about" onclick="toggleMenu()">About</a>
     <a href="#vision" onclick="toggleMenu()">Vision</a>
     <a href="#pastor" onclick="toggleMenu()">Pastor</a>
+    <a href="#gallery" onclick="toggleMenu()">Gallery</a>
     <a href="#prayer" onclick="toggleMenu()">Prayer</a>
     <a href="#contact" onclick="toggleMenu()">Contact</a>
     <a href="#contact" class="btn-gold" onclick="toggleMenu()" style="text-align:center;margin-top:8px;">Plan Your Visit</a>
@@ -907,6 +930,24 @@
             <a href="mailto:godcannotlieministries@yahoo.com" class="chip">✉ godcannotlieministries@yahoo.com</a>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTO GALLERY -->
+  <section class="gallery-sec" id="gallery">
+    <div class="container">
+      <p class="section-eyebrow fade-in">Life at GCL</p>
+      <h2 class="section-title fade-in">Ministry Moments</h2>
+      <p class="gallery-intro fade-in">Celebrating worship, fellowship, outreach, and the lives God is transforming through our ministry.</p>
+      <div class="gallery-shell fade-in">
+        <div class="gallery-stage" id="gallery-stage" aria-live="polite">
+          <p class="gallery-empty" id="gallery-empty" hidden>Gallery photos are coming soon.</p>
+        </div>
+        <button class="gallery-control previous" id="gallery-previous" type="button" aria-label="Previous photo" hidden>‹</button>
+        <button class="gallery-control next" id="gallery-next" type="button" aria-label="Next photo" hidden>›</button>
+        <div class="gallery-dots" id="gallery-dots" aria-label="Choose a gallery photo"></div>
+        <p class="gallery-status" id="gallery-status" role="status"></p>
       </div>
     </div>
   </section>
@@ -1062,6 +1103,7 @@
         <a href="#about">About</a>
         <a href="#vision">Our Vision</a>
         <a href="#pastor">Leadership</a>
+        <a href="#gallery">Photo Gallery</a>
         <a href="#prayer">Prayer Request</a>
         <a href="#contact">Contact</a>
         <a href="http://iamonesimus.com" target="_blank">Prison Ministry</a>
@@ -1128,6 +1170,7 @@
       });
     });
   </script>
+  <script type="module" src="gallery.js"></script>
 
 </body>
 </html>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Gallery Admin | GCL Ministries</title>
+  <title>Site Admin | GCL Ministries</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
@@ -21,7 +21,8 @@
     p { color:var(--muted); line-height:1.7; }
     form { display:grid; gap:18px; }
     label { display:grid; gap:8px; font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--light); }
-    input { width:100%; padding:14px 16px; border:1px solid rgba(209,159,39,.35); border-radius:4px; background:var(--dark); color:white; font:inherit; }
+    input, textarea { width:100%; padding:14px 16px; border:1px solid rgba(209,159,39,.35); border-radius:4px; background:var(--dark); color:white; font:inherit; }
+    textarea { min-height:110px; resize:vertical; }
     input:focus { outline:2px solid var(--gold); outline-offset:2px; }
     button { border:0; border-radius:4px; padding:13px 20px; background:var(--gold); color:var(--dark); font:600 12px Cinzel,serif; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
     button:disabled { opacity:.55; cursor:wait; }
@@ -37,18 +38,25 @@
     .photo-card footer { padding:12px; }
     .photo-name { overflow:hidden; margin:0 0 10px; text-overflow:ellipsis; white-space:nowrap; font-size:12px; color:var(--muted); }
     .photo-card button { width:100%; padding:10px; }
-    @media (max-width:600px) { header { align-items:flex-start; } .brand span { max-width:160px; } }
+    .admin-section { margin-top:34px; padding-top:30px; border-top:1px solid rgba(209,159,39,.25); }
+    .event-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .event-form-grid .wide { grid-column:1 / -1; }
+    .event-list { display:grid; gap:14px; margin-top:20px; }
+    .event-card { padding:18px; border:1px solid rgba(209,159,39,.25); border-radius:8px; background:var(--dark); }
+    .event-card h3 { margin:0 0 7px; color:var(--light); }
+    .event-card p { margin:4px 0; }
+    @media (max-width:600px) { header { align-items:flex-start; } .brand span { max-width:160px; } .event-form-grid { grid-template-columns:1fr; } .event-form-grid .wide { grid-column:auto; } }
   </style>
 </head>
 <body>
   <header>
-    <a class="brand" href="index.html"><img src="gcl-logo.png" alt=""><span>GCL Ministries Gallery Admin</span></a>
-    <a href="index.html#gallery">View gallery</a>
+    <a class="brand" href="index.html"><img src="gcl-logo.png" alt=""><span>GCL Ministries Site Admin</span></a>
+    <div><a href="index.html#gallery">Gallery</a> · <a href="events.html">Events</a></div>
   </header>
   <main>
     <section class="panel" id="login-panel">
       <h1>Admin Sign In</h1>
-      <p>Authorized ministry administrators may upload or remove public gallery photos.</p>
+      <p>Authorized ministry administrators may manage public gallery photos and upcoming events.</p>
       <form id="login-form">
         <label>Email address<input id="email" type="email" autocomplete="username" required></label>
         <label>Password<input id="password" type="password" autocomplete="current-password" required minlength="8"></label>
@@ -70,6 +78,22 @@
       <div class="row"><h2>Published Photos</h2><button class="secondary" id="refresh" type="button">Refresh</button></div>
       <p id="photo-status">Loading photos…</p>
       <div class="photo-grid" id="photo-grid"></div>
+
+      <section class="admin-section" aria-labelledby="events-heading">
+        <div class="row"><div><h1 id="events-heading">Upcoming Events</h1><p>Add events for the public Events page and calendar buttons.</p></div><a href="events.html">View events page</a></div>
+        <form class="upload-box event-form-grid" id="event-form">
+          <label class="wide">Event title<input id="event-title" type="text" maxlength="120" required></label>
+          <label>Starts<input id="event-start" type="datetime-local" required></label>
+          <label>Ends<input id="event-end" type="datetime-local" required></label>
+          <label class="wide">Location<input id="event-location" type="text" maxlength="240" placeholder="3000 Melita Ave, Charlotte, NC 28216"></label>
+          <label class="wide">Description<textarea id="event-description" maxlength="2000" placeholder="Tell visitors what to expect."></textarea></label>
+          <button type="submit">Publish Event</button>
+          <p class="message wide" id="event-message" role="status"></p>
+        </form>
+        <div class="row"><h2>Published Events</h2><button class="secondary" id="refresh-events" type="button">Refresh</button></div>
+        <p id="event-status">Loading events…</p>
+        <div class="event-list" id="event-list"></div>
+      </section>
     </section>
   </main>
   <script type="module">
@@ -83,6 +107,10 @@
     const uploadMessage = document.getElementById('upload-message');
     const photoGrid = document.getElementById('photo-grid');
     const photoStatus = document.getElementById('photo-status');
+    const eventForm = document.getElementById('event-form');
+    const eventMessage = document.getElementById('event-message');
+    const eventStatus = document.getElementById('event-status');
+    const eventList = document.getElementById('event-list');
     const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
     let inactivityTimer;
     let activeSession = false;
@@ -111,6 +139,7 @@
       resetInactivityTimer();
       document.getElementById('signed-in-as').textContent = `Signed in as ${user.email}`;
       await loadPhotos();
+      await loadEvents();
     }
 
     async function endAdminSession(reason = 'signedout') {
@@ -154,6 +183,29 @@
       });
     }
 
+    async function loadEvents() {
+      eventStatus.textContent = 'Loading events…';
+      eventList.replaceChildren();
+      const { data, error } = await supabase.from('events').select('*').order('starts_at', { ascending:true });
+      if (error) { eventStatus.textContent = error.message; return; }
+      eventStatus.textContent = data.length ? `${data.length} event${data.length === 1 ? '' : 's'} published` : 'No events published yet.';
+      data.forEach((item) => {
+        const card = document.createElement('article'); card.className = 'event-card';
+        const title = document.createElement('h3'); title.textContent = item.title;
+        const date = document.createElement('p'); date.textContent = `${new Date(item.starts_at).toLocaleString()} – ${new Date(item.ends_at).toLocaleString()}`;
+        const location = document.createElement('p'); location.textContent = item.location || 'Location to be announced';
+        const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'danger'; remove.textContent = 'Delete Event';
+        remove.addEventListener('click', async () => {
+          if (!window.confirm(`Delete “${item.title}” from the Events page?`)) return;
+          remove.disabled = true;
+          const { error:deleteError } = await supabase.from('events').delete().eq('id', item.id);
+          if (deleteError) { eventMessage.textContent = deleteError.message; remove.disabled = false; return; }
+          eventMessage.textContent = 'Event deleted.'; await loadEvents();
+        });
+        card.append(title, date, location, remove); eventList.appendChild(card);
+      });
+    }
+
     loginForm.addEventListener('submit', async (event) => {
       event.preventDefault(); loginMessage.textContent = 'Signing in…';
       const button = loginForm.querySelector('button'); button.disabled = true;
@@ -181,8 +233,26 @@
       uploadForm.reset(); button.disabled = false; await loadPhotos();
     });
 
+    eventForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); eventMessage.textContent = 'Publishing event…';
+      const button = eventForm.querySelector('button'); button.disabled = true;
+      const startsAt = new Date(document.getElementById('event-start').value);
+      const endsAt = new Date(document.getElementById('event-end').value);
+      if (!(endsAt > startsAt)) { eventMessage.textContent = 'The ending time must be after the starting time.'; button.disabled = false; return; }
+      const { error } = await supabase.from('events').insert({
+        title:document.getElementById('event-title').value.trim(),
+        description:document.getElementById('event-description').value.trim(),
+        location:document.getElementById('event-location').value.trim(),
+        starts_at:startsAt.toISOString(), ends_at:endsAt.toISOString(), is_published:true
+      });
+      button.disabled = false;
+      if (error) { eventMessage.textContent = error.message; return; }
+      eventMessage.textContent = 'Event published successfully.'; eventForm.reset(); await loadEvents();
+    });
+
     document.getElementById('sign-out').addEventListener('click', () => endAdminSession('signedout'));
     document.getElementById('refresh').addEventListener('click', loadPhotos);
+    document.getElementById('refresh-events').addEventListener('click', loadEvents);
     ['pointerdown', 'keydown', 'touchstart', 'focus'].forEach((eventName) => {
       window.addEventListener(eventName, resetInactivityTimer, { passive: true });
     });

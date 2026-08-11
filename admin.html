@@ -30,6 +30,10 @@
     button.danger { background:#9d3540; color:white; }
     .row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; }
     .message { min-height:24px; margin:14px 0 0; color:var(--gold); }
+    .notice { display:none; position:fixed; z-index:1000; right:20px; top:20px; width:min(390px,calc(100% - 40px)); padding:16px 18px; border-radius:8px; color:white; font-weight:700; line-height:1.45; box-shadow:0 18px 55px rgba(0,0,0,.4); }
+    .notice.show { display:block; }
+    .notice.success { background:#236846; border:1px solid #67c99a; }
+    .notice.error { background:#8c2f3a; border:1px solid #e1848d; }
     #dashboard[hidden], #login-panel[hidden] { display:none; }
     .upload-box { margin:28px 0; padding:24px; border:1px dashed rgba(209,159,39,.55); border-radius:8px; }
     .photo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:18px; margin-top:24px; }
@@ -49,6 +53,7 @@
   </style>
 </head>
 <body>
+  <div class="notice" id="admin-notice" role="alert" aria-live="assertive"></div>
   <header>
     <a class="brand" href="index.html"><img src="gcl-logo.png" alt=""><span>GCL Ministries Site Admin</span></a>
     <div><a href="index.html#gallery">Gallery</a> · <a href="events.html">Events</a></div>
@@ -107,6 +112,7 @@
     const uploadMessage = document.getElementById('upload-message');
     const photoGrid = document.getElementById('photo-grid');
     const photoStatus = document.getElementById('photo-status');
+    const adminNotice = document.getElementById('admin-notice');
     const eventForm = document.getElementById('event-form');
     const eventMessage = document.getElementById('event-message');
     const eventStatus = document.getElementById('event-status');
@@ -114,6 +120,14 @@
     const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
     let inactivityTimer;
     let activeSession = false;
+    let noticeTimer;
+
+    function showNotice(message, type) {
+      window.clearTimeout(noticeTimer);
+      adminNotice.textContent = message;
+      adminNotice.className = `notice show ${type}`;
+      noticeTimer = window.setTimeout(() => { adminNotice.className = 'notice'; }, 6500);
+    }
 
     function isAdmin(user) { return user?.app_metadata?.role === 'admin'; }
     function safeFileName(name) {
@@ -220,16 +234,21 @@
       const files = [...document.getElementById('photo-files').files];
       if (!files.length) return;
       const invalid = files.find((file) => file.size > 10 * 1024 * 1024 || !['image/jpeg','image/png','image/webp','image/gif'].includes(file.type));
-      if (invalid) { uploadMessage.textContent = `${invalid.name} is not an accepted image under 10 MB.`; return; }
+      if (invalid) { const message = `${invalid.name} is not an accepted image under 10 MB.`; uploadMessage.textContent = message; showNotice(message, 'error'); return; }
       const button = uploadForm.querySelector('button'); button.disabled = true;
       let uploaded = 0;
       for (const file of files) {
         uploadMessage.textContent = `Uploading ${uploaded + 1} of ${files.length}…`;
-        const { error } = await supabase.storage.from(GALLERY_BUCKET).upload(safeFileName(file.name), file, { cacheControl:'3600', contentType:file.type, upsert:false });
-        if (error) { uploadMessage.textContent = `Upload stopped: ${error.message}`; button.disabled = false; return; }
+        const storedName = safeFileName(file.name);
+        const { data:uploadData, error } = await supabase.storage.from(GALLERY_BUCKET).upload(storedName, file, { cacheControl:'3600', contentType:file.type, upsert:false });
+        if (error || !uploadData?.path) { const message = `Upload failed for ${file.name}: ${error?.message || 'Supabase did not confirm the file.'}`; uploadMessage.textContent = message; showNotice(message, 'error'); button.disabled = false; return; }
+        const { data:verification, error:verificationError } = await supabase.storage.from(GALLERY_BUCKET).list('', { limit:10, search:storedName });
+        const confirmed = !verificationError && verification?.some((item) => item.id && item.name === storedName);
+        if (!confirmed) { const message = `${file.name} was sent, but backend verification failed. It was not reported as published.`; uploadMessage.textContent = message; showNotice(message, 'error'); button.disabled = false; return; }
         uploaded += 1;
       }
-      uploadMessage.textContent = `${uploaded} photo${uploaded === 1 ? '' : 's'} published successfully.`;
+      const successMessage = `${uploaded} photo${uploaded === 1 ? '' : 's'} uploaded, verified, and published successfully.`;
+      uploadMessage.textContent = successMessage; showNotice(successMessage, 'success');
       uploadForm.reset(); button.disabled = false; await loadPhotos();
     });
 

@@ -1106,6 +1106,7 @@
           <div class="contact-info-item">
             <p class="contact-info-label">Address</p>
             <p class="contact-info-val">3000 Melita Ave<br>Charlotte, NC 28216</p>
+            <button type="button" class="btn-outline" onclick="openChurchDirections()" style="margin-top:14px;padding:10px 18px;">Open in Maps</button>
           </div>
           <div class="contact-info-item">
             <p class="contact-info-label">Phone</p>
@@ -1333,6 +1334,15 @@
         button.disabled = false;
         button.textContent = 'Send Contact Information';
       }
+    }
+
+    function openChurchDirections() {
+      const address = encodeURIComponent('3000 Melita Ave, Charlotte, NC 28216');
+      const isAppleDevice = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const mapsUrl = isAppleDevice
+        ? `https://maps.apple.com/?q=${address}`
+        : `https://www.google.com/maps/search/?api=1&query=${address}`;
+      window.open(mapsUrl, '_blank', 'noopener,noreferrer');
     }
 
     // Smooth nav highlight

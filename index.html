@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>God Cannot Lie Ministries | Charlotte, NC</title>
+  <meta name="description" content="God Cannot Lie Ministries - Believing God and Manifesting His Word. Sunday 10AM & Wednesday 7PM in Charlotte, NC.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #132045;
+      --navy-dark: #0c1730;
+      --navy-mid: #1a2e55;
+      --gold: #d19f27;
+      --gold-light: #e8b83a;
+      --gold-dim: #a07241;
+      --white: #ffffff;
+      --off-white: #f5f2ec;
+      --text-muted: #8a9db5;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(12, 23, 48, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(209,159,39,0.2);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .nav-logo-badge {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .nav-logo-badge img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .nav-wordmark {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Lato', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-cta {
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 10px 22px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--gold);
+      transition: all 0.3s;
+    }
+
+    /* mobile menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: var(--navy-dark);
+      border-bottom: 1px solid rgba(209,159,39,0.2);
+      z-index: 999;
+      padding: 24px 40px;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Lato', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      background: var(--navy-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(209,159,39,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      margin: 0 auto 32px;
+      position: relative;
+      animation: fadeInDown 0.8s ease both;
+      overflow: hidden;
+    }
+
+    .hero-logo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Lato', sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 16px;
+      animation: fadeInDown 0.8s 0.1s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--white);
+      max-width: 700px;
+      margin: 0 auto 20px;
+      animation: fadeInDown 0.8s 0.2s ease both;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 480px;
+      margin: 0 auto 40px;
+      font-weight: 300;
+      animation: fadeInDown 0.8s 0.3s ease both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInDown 0.8s 0.4s ease both;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      border-radius: 2px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 13px 32px;
+      border-radius: 2px;
+      border: 1px solid var(--gold);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    .btn-outline:hover { background: rgba(209,159,39,0.1); }
+
+    /* ===== SERVICE BAR ===== */
+    .service-bar {
+      background: var(--gold);
+      padding: 18px 40px;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .service-item { text-align: center; }
+
+    .service-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(19,32,69,0.6);
+      font-family: 'Lato', sans-serif;
+      margin-bottom: 3px;
+    }
+
+    .service-val {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy-dark);
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== SECTIONS ===== */
+    section { padding: 90px 40px; }
+
+    .container { max-width: 980px; margin: 0 auto; }
+
+    .section-eyebrow {
+      font-family: 'Lato', sans-serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 50px;
+      line-height: 1.2;
+    }
+
+    /* ===== WELCOME ===== */
+    .welcome {
+      background: var(--navy);
+      border-top: 1px solid rgba(209,159,39,0.15);
+      border-bottom: 1px solid rgba(209,159,39,0.15);
+    }
+
+    .welcome-inner {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .welcome-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 3vw, 30px);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .welcome-attr {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-family: 'Lato', sans-serif;
+    }
+
+    /* ===== PILLARS ===== */
+    .pillars-bg { background: var(--navy-dark); }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(209,159,39,0.15);
+      border: 1px solid rgba(209,159,39,0.15);
+    }
+
+    .pillar {
+      background: var(--navy-dark);
+      padding: 48px 36px;
+      transition: background 0.3s;
+    }
+
+    .pillar:hover { background: rgba(209,159,39,0.04); }
+
+    .pillar-num {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .pillar h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .pillar p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .pillar ul {
+      list-style: none;
+      margin-top: 16px;
+    }
+
+    .pillar ul li {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      font-weight: 300;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .pillar ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      opacity: 0.5;
+      font-size: 10px;
+      top: 4px;
+    }
+
+    /* ===== CORE VALUES ===== */
+    .values { background: var(--navy); }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 0;
+    }
+
+    .value-card {
+      border: 1px solid rgba(209,159,39,0.15);
+      padding: 28px 32px;
+      border-radius: 2px;
+      transition: border-color 0.3s;
+    }
+
+    .value-card:hover { border-color: rgba(209,159,39,0.4); }
+
+    .value-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      font-weight: 300;
+    }
+
+    .value-card strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== PASTOR ===== */
+    .pastor-sec { background: var(--navy-dark); }
+
+    .pastor-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .pastor-avatar {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 3px solid rgba(209,159,39,0.3);
+    }
+
+    .pastor-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .pastor-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .pastor-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 20px;
+    }
+
+    .pastor-bio {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      font-weight: 300;
+      max-width: 580px;
+      margin-bottom: 24px;
+    }
+
+    .pastor-chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font-size: 12px;
+      color: var(--gold-dim);
+      background: rgba(209,159,39,0.08);
+      padding: 6px 14px;
+      border-radius: 2px;
+      border: 1px solid rgba(209,159,39,0.2);
+      text-decoration: none;
+    }
+
+    /* ===== PRAYER REQUEST ===== */
+    .prayer-sec {
+      background: var(--navy-dark);
+      border-top: 1px solid rgba(209,159,39,0.15);
+    }
+
+    .prayer-inner {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .prayer-intro {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      text-align: center;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    /* ===== CONTACT FORM ===== */
+    .contact-sec {
+      background: var(--navy);
+      border-top: 1px solid rgba(209,159,39,0.15);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-info { }
+
+    .contact-info-item {
+      margin-bottom: 28px;
+    }
+
+    .contact-info-label {
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 6px;
+    }
+
+    .contact-info-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: var(--white);
+      line-height: 1.5;
+    }
+
+    .contact-info-val a {
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    form { display: flex; flex-direction: column; gap: 16px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .form-group label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(209,159,39,0.2);
+      border-radius: 2px;
+      padding: 12px 16px;
+      color: var(--white);
+      font-family: 'Lato', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      transition: border-color 0.3s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--gold); }
+
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .form-group select option { background: var(--navy-dark); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--navy-dark);
+      border-top: 1px solid rgba(209,159,39,0.2);
+      padding: 60px 40px 32px;
+    }
+
+    .footer-grid {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-name {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
+
+    .footer-brand-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .social-row { display: flex; gap: 10px; }
+
+    .social-btn {
+      width: 34px; height: 34px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .social-btn:hover {
+      background: rgba(209,159,39,0.15);
+      border-color: rgba(209,159,39,0.4);
+    }
+
+    .social-btn svg { width: 14px; height: 14px; fill: var(--gold-dim); }
+
+    .footer-col h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+
+    .footer-col p,
+    .footer-col a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      line-height: 2.2;
+      text-decoration: none;
+      display: block;
+      transition: color 0.3s;
+    }
+
+    .footer-col a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copyright {
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+
+      section { padding: 60px 20px; }
+      .hero { padding: 100px 20px 60px; }
+      .service-bar { gap: 24px; padding: 16px 20px; }
+
+      .pillars-grid { grid-template-columns: 1fr; }
+      .values-grid { grid-template-columns: 1fr; }
+      .pastor-inner { grid-template-columns: 1fr; gap: 28px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .nav-wordmark { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-badge">
+        <img src="gcl-logo.png" alt="God Cannot Lie Ministries Logo">
+      </div>
+      <div class="nav-wordmark">God Cannot Lie<br>Ministries</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#vision">Vision</a></li>
+      <li><a href="#pastor">Pastor</a></li>
+      <li><a href="#prayer">Prayer</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Plan Your Visit</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" onclick="toggleMenu()">About</a>
+    <a href="#vision" onclick="toggleMenu()">Vision</a>
+    <a href="#pastor" onclick="toggleMenu()">Pastor</a>
+    <a href="#prayer" onclick="toggleMenu()">Prayer</a>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+    <a href="#contact" class="btn-gold" onclick="toggleMenu()" style="text-align:center;margin-top:8px;">Plan Your Visit</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-logo">
+      <img src="gcl-logo.png" alt="God Cannot Lie Ministries Logo">
+    </div>
+    <p class="hero-eyebrow">Charlotte, NC &nbsp;·&nbsp; Established 2018</p>
+    <h1>Believing God and<br><em>Manifesting His Word</em></h1>
+    <p class="hero-sub">A community where believers are equipped, trained, and sent out to triumph victoriously in life.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-gold">Plan Your Visit</a>
+      <a href="http://www.youtube.com/channel/UCCiVzrxhbXI34x8fAq1f82w" target="_blank" class="btn-outline">Watch a Sermon</a>
+    </div>
+  </section>
+
+  <!-- SERVICE BAR -->
+  <div class="service-bar">
+    <div class="service-item">
+      <div class="service-label">Sunday Service</div>
+      <div class="service-val">10:00 AM</div>
+    </div>
+    <div class="service-item">
+      <div class="service-label">Wednesday Bible Study</div>
+      <div class="service-val">7:00 PM</div>
+    </div>
+    <div class="service-item">
+      <div class="service-label">Location</div>
+      <div class="service-val">3000 Melita Ave, Charlotte NC</div>
+    </div>
+    <div class="service-item">
+      <div class="service-label">Phone</div>
+      <div class="service-val">704-292-6985</div>
+    </div>
+  </div>
+
+  <!-- WELCOME -->
+  <section class="welcome" id="about">
+    <div class="container">
+      <div class="welcome-inner fade-in">
+        <p class="welcome-quote">"We welcome you to fellowship with us as we experience the power, love, and word of God together."</p>
+        <p class="welcome-attr">God Cannot Lie Ministries</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars-bg" id="vision">
+    <div class="container">
+      <p class="section-eyebrow fade-in">Our Mission</p>
+      <h2 class="section-title fade-in">Equip, Ship &amp; Transform</h2>
+      <div class="pillars-grid">
+        <div class="pillar fade-in">
+          <p class="pillar-num">01 — Equipping</p>
+          <h3>Training Believers</h3>
+          <ul>
+            <li>Studying the Word of God</li>
+            <li>Fasting, praying &amp; praise</li>
+            <li>Worship, evangelism &amp; deliverance</li>
+            <li>Hearing the voice of God</li>
+            <li>Operating in gifts of the Spirit</li>
+            <li>Knowing how to walk in your calling</li>
+            <li>Abundance in your finances</li>
+            <li>Cause your faith to move mountains</li>
+          </ul>
+        </div>
+        <div class="pillar fade-in">
+          <p class="pillar-num">02 — Shipping</p>
+          <h3>Sending Them Out</h3>
+          <ul>
+            <li>License and ordain pastors &amp; elders</li>
+            <li>Help those called to start ministries</li>
+            <li>Establish speaking engagements</li>
+            <li>Support small businesses</li>
+            <li>Foster entrepreneurship</li>
+          </ul>
+        </div>
+        <div class="pillar fade-in">
+          <p class="pillar-num">03 — Prison Ministry</p>
+          <h3>Reaching the Lost</h3>
+          <p>Bringing the Word of God and restoration to incarcerated individuals and their families through our partnership with I Am Onesimus.</p>
+          <br>
+          <a href="http://iamonesimus.com" target="_blank" class="chip" style="display:inline-block;margin-top:8px;">iamonesimus.com →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE VALUES -->
+  <section class="values">
+    <div class="container">
+      <p class="section-eyebrow fade-in">What We Believe</p>
+      <h2 class="section-title fade-in">Core Values</h2>
+      <div class="values-grid">
+        <div class="value-card fade-in">
+          <strong>The Bible is Infallible</strong>
+          <p>We believe the Bible is the infallible Word of God and that men were inspired as they wrote the scriptures. (2 Timothy 3:16, 2 Peter 1:20-21)</p>
+        </div>
+        <div class="value-card fade-in">
+          <strong>The Godhead</strong>
+          <p>We believe in the Godhead — the Father, Son, and Holy Ghost are God and are one (meaning united) but distinctive in persons. (1 John 5:7, Matthew 3:16-17)</p>
+        </div>
+        <div class="value-card fade-in">
+          <strong>Death, Burial &amp; Resurrection</strong>
+          <p>We believe in the Death, Burial, and Resurrection of Jesus Christ. (Romans 10:9)</p>
+        </div>
+        <div class="value-card fade-in">
+          <strong>Baptism in the Holy Ghost</strong>
+          <p>We believe that we must be baptized in water and in the Holy Ghost. (Acts 2:38)</p>
+        </div>
+        <div class="value-card fade-in">
+          <strong>Divine Healing &amp; Miracles</strong>
+          <p>We believe in Divine Healing, Miracles, and Deliverance. (Mark 16:17-18)</p>
+        </div>
+        <div class="value-card fade-in">
+          <strong>Heaven, Hell &amp; The Return of Christ</strong>
+          <p>We believe there is a heaven and a hell, and that Jesus Christ is coming back for a church without blemish. (Revelations 20:11-15, 1 Corinthians 15:24-28)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASTOR -->
+  <section class="pastor-sec" id="pastor">
+    <div class="container">
+      <p class="section-eyebrow fade-in">Leadership</p>
+      <h2 class="section-title fade-in">Meet the Pastor</h2>
+      <div class="pastor-inner fade-in">
+        <div class="pastor-avatar">
+          <img src="gcl-logo.png" alt="God Cannot Lie Ministries Logo">
+        </div>
+        <div>
+          <h3 class="pastor-name">Pastor A. Griffith</h3>
+          <p class="pastor-title">Founder &amp; Senior Pastor</p>
+          <p class="pastor-bio">Pastor Griffith is a servant leader anointed to preach, teach, and train people to operate in their God-given gifts and callings. His passion is discipling people — not just preaching to them. He is married to Minister Kotaya Griffith and they have a beautiful son named Justus Redeem. If you want to know more about him, you will have to just meet him for yourself.</p>
+          <div class="pastor-chips">
+            <a href="tel:7042926985" class="chip">📞 704-292-6985</a>
+            <a href="mailto:godcannotlieministries@yahoo.com" class="chip">✉ godcannotlieministries@yahoo.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRAYER REQUEST -->
+  <section class="prayer-sec" id="prayer">
+    <div class="container">
+      <p class="section-eyebrow fade-in">We're Here For You</p>
+      <h2 class="section-title fade-in">Submit a Prayer Request</h2>
+      <div class="prayer-inner fade-in">
+        <p class="prayer-intro">We believe in the power of prayer. Share your request with us and our prayer team will lift you up in prayer.</p>
+        <form onsubmit="handlePrayerSubmit(event)">
+          <div class="form-group">
+            <label for="prayer-name">Your Name (Optional)</label>
+            <input type="text" id="prayer-name" name="prayer-name" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label for="prayer-email">Email Address (Optional)</label>
+            <input type="email" id="prayer-email" name="prayer-email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="prayer-request">Prayer Request</label>
+            <textarea id="prayer-request" name="prayer-request" placeholder="Share your prayer request with us..." required style="min-height: 150px;"></textarea>
+          </div>
+          <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
+            <input type="checkbox" id="prayer-anonymous" name="prayer-anonymous" style="width: auto; margin: 0;">
+            <label for="prayer-anonymous" style="margin: 0; text-transform: none; letter-spacing: 0.5px; font-size: 12px;">Keep my request anonymous</label>
+          </div>
+          <button type="submit" class="btn-gold" style="margin-top:8px;width:100%;text-align:center;">Submit Prayer Request</button>
+          <p id="prayer-success" style="display:none;color:var(--gold);font-size:13px;margin-top:12px;text-align:center;">Thank you. We're praying for you.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-sec" id="contact">
+    <div class="container">
+      <p class="section-eyebrow fade-in">Get In Touch</p>
+      <h2 class="section-title fade-in">Connect With Us</h2>
+      <div class="contact-grid">
+        <div class="contact-info fade-in">
+          <div class="contact-info-item">
+            <p class="contact-info-label">Address</p>
+            <p class="contact-info-val">3000 Melita Ave<br>Charlotte, NC 28216</p>
+          </div>
+          <div class="contact-info-item">
+            <p class="contact-info-label">Phone</p>
+            <p class="contact-info-val"><a href="tel:7042926985">704-292-6985</a></p>
+          </div>
+          <div class="contact-info-item">
+            <p class="contact-info-label">Email</p>
+            <p class="contact-info-val"><a href="mailto:godcannotlieministries@yahoo.com">godcannotlieministries@yahoo.com</a></p>
+          </div>
+          <div class="contact-info-item">
+            <p class="contact-info-label">Service Times</p>
+            <p class="contact-info-val">Sunday — 10:00 AM<br>Wednesday — 7:00 PM</p>
+          </div>
+          <div class="contact-info-item">
+            <p class="contact-info-label">Follow Us</p>
+            <div class="social-row" style="margin-top:8px;">
+              <a href="https://www.facebook.com/godcannotlieministries" target="_blank" class="social-btn" aria-label="Facebook">
+                <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+              <a href="http://www.youtube.com/channel/UCCiVzrxhbXI34x8fAq1f82w" target="_blank" class="social-btn" aria-label="YouTube">
+                <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47a2.78 2.78 0 0 0-1.95 1.95C1 8.12 1 12 1 12s0 3.88.46 5.58a2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95C23 15.88 23 12 23 12s0-3.88-.46-5.58zM10 15.5v-7l6 3.5-6 3.5z"/></svg>
+              </a>
+              <a href="http://www.twitter.com/godcannotlie" target="_blank" class="social-btn" aria-label="Twitter">
+                <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="fade-in">
+          <form onsubmit="handleSubmit(event)">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="(704) 000-0000">
+            </div>
+            <div class="form-group">
+              <label for="reason">Reason for Reaching Out</label>
+              <select id="reason" name="reason">
+                <option value="">Select one…</option>
+                <option>Planning a visit</option>
+                <option>Prayer request</option>
+                <option>Ministry inquiry</option>
+                <option>Prison ministry</option>
+                <option>Donation / giving</option>
+                <option>General question</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="How can we help you?"></textarea>
+            </div>
+            <button type="submit" class="btn-gold" style="margin-top:8px;width:100%;text-align:center;">Send Message</button>
+            <p id="form-success" style="display:none;color:var(--gold);font-size:13px;margin-top:12px;text-align:center;">Thank you! We'll be in touch soon.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <p class="footer-brand-name">God Cannot Lie Ministries</p>
+        <p class="footer-brand-tagline">"Equip em and ship em"</p>
+        <div class="social-row">
+          <a href="https://www.facebook.com/godcannotlieministries" target="_blank" class="social-btn" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="http://www.youtube.com/channel/UCCiVzrxhbXI34x8fAq1f82w" target="_blank" class="social-btn" aria-label="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47a2.78 2.78 0 0 0-1.95 1.95C1 8.12 1 12 1 12s0 3.88.46 5.58a2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95C23 15.88 23 12 23 12s0-3.88-.46-5.58zM10 15.5v-7l6 3.5-6 3.5z"/></svg>
+          </a>
+          <a href="http://www.twitter.com/godcannotlie" target="_blank" class="social-btn" aria-label="Twitter">
+            <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Visit Us</h4>
+        <p>3000 Melita Ave</p>
+        <p>Charlotte, NC 28216</p>
+        <p>Sunday 10:00 AM</p>
+        <p>Wednesday 7:00 PM</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <a href="#about">About</a>
+        <a href="#vision">Our Vision</a>
+        <a href="#pastor">Leadership</a>
+        <a href="#prayer">Prayer Request</a>
+        <a href="#contact">Contact</a>
+        <a href="http://iamonesimus.com" target="_blank">Prison Ministry</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="tel:7042926985">704-292-6985</a>
+        <a href="mailto:godcannotlieministries@yahoo.com" style="word-break:break-all;">godcannotlieministries<br>@yahoo.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 God Cannot Lie Ministries. All rights reserved.</p>
+      <p class="footer-copyright">Charlotte, NC</p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Form submit (basic — no backend yet)
+    function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('form-success').style.display = 'block';
+      e.target.reset();
+    }
+
+    // Prayer form submit
+    function handlePrayerSubmit(e) {
+      e.preventDefault();
+      document.getElementById('prayer-success').style.display = 'block';
+      e.target.reset();
+    }
+
+    // Smooth nav highlight
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.remove('open');
+      });
+    });
+  </script>
+
+</body>
+</html>

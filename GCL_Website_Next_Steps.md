@@ -49,6 +49,9 @@ git push
 ```
 GitHub Pages will automatically rebuild and update the live site within 1-2 minutes.
 
+> ⚠️ **Important:** `index.html` is a copy of `GCL_Website.html` and is required for GitHub Pages.  
+> **Every time `GCL_Website.html` is updated, `index.html` must be overwritten to match before pushing.**
+
 ### PDF to DOC Skill
 - [x] Skill created at `C:\Users\hayle\.kiro\skills\pdf-to-doc.md`
 - [x] `pdf2docx` Python library installed

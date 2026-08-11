@@ -965,26 +965,29 @@
             2. Create a form, set the notification email to: godcannotlieministries@yahoo.com
             3. Replace YOUR_PRAYER_FORM_ID below with your actual Formspree form ID
           -->
-          <form action="https://formspree.io/f/YOUR_PRAYER_FORM_ID" method="POST" onsubmit="handleSubmit(event, 'prayer-success')">
-            <input type="hidden" name="_subject" value="New Prayer Request - GCL Ministries">
+          <form id="prayer-form" action="https://formsubmit.co/ajax/godcannotlieministries@yahoo.com" method="POST" onsubmit="handlePrayerSubmit(event)">
+            <input type="hidden" name="_subject" value="New Prayer Request | GCL Ministries">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_url" value="https://aahayles.github.io/gcl-ministries/#prayer">
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;" aria-hidden="true">
           <div class="form-group">
             <label for="prayer-name">Your Name (Optional)</label>
-            <input type="text" id="prayer-name" name="prayer-name" placeholder="Your name">
+            <input type="text" id="prayer-name" name="Name" placeholder="Your name" autocomplete="name">
           </div>
           <div class="form-group">
             <label for="prayer-email">Email Address (Optional)</label>
-            <input type="email" id="prayer-email" name="prayer-email" placeholder="your@email.com">
+            <input type="email" id="prayer-email" name="Email" placeholder="your@email.com" autocomplete="email">
           </div>
           <div class="form-group">
             <label for="prayer-request">Prayer Request</label>
-            <textarea id="prayer-request" name="prayer-request" placeholder="Share your prayer request with us..." required style="min-height: 150px;"></textarea>
+            <textarea id="prayer-request" name="Prayer Request" placeholder="Share your prayer request with us..." required minlength="10" style="min-height: 150px;"></textarea>
           </div>
           <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
             <input type="checkbox" id="prayer-anonymous" name="prayer-anonymous" style="width: auto; margin: 0;">
             <label for="prayer-anonymous" style="margin: 0; text-transform: none; letter-spacing: 0.5px; font-size: 12px;">Keep my request anonymous</label>
           </div>
-          <button type="submit" class="btn-gold" style="margin-top:8px;width:100%;text-align:center;">Submit Prayer Request</button>
-          <p id="prayer-success" style="display:none;color:var(--gold);font-size:13px;margin-top:12px;text-align:center;">Thank you. We're praying for you.</p>
+          <button id="prayer-submit" type="submit" class="btn-gold" style="margin-top:8px;width:100%;text-align:center;">Submit Prayer Request</button>
+          <p id="prayer-status" style="display:none;color:var(--gold);font-size:13px;margin-top:12px;text-align:center;" role="status" aria-live="polite"></p>
         </form>
       </div>
     </div>
@@ -1157,11 +1160,51 @@
       }
     }
 
-    // Prayer form submit
-    function handlePrayerSubmit(e) {
+    // Prayer request email submission
+    async function handlePrayerSubmit(e) {
       e.preventDefault();
-      document.getElementById('prayer-success').style.display = 'block';
-      e.target.reset();
+      const form = e.target;
+      const button = document.getElementById('prayer-submit');
+      const status = document.getElementById('prayer-status');
+      const payload = new FormData(form);
+      const anonymous = document.getElementById('prayer-anonymous').checked;
+      const replyEmail = String(payload.get('Email') || '').trim();
+
+      payload.set('Name', anonymous ? 'Anonymous' : (payload.get('Name') || 'Not provided'));
+      payload.set('Email', anonymous ? 'Withheld for anonymous request' : (payload.get('Email') || 'Not provided'));
+      if (!anonymous && replyEmail) payload.set('_replyto', replyEmail);
+      payload.set('Anonymous Request', anonymous ? 'Yes' : 'No');
+      payload.set('Submitted At', new Date().toLocaleString('en-US', {
+        dateStyle: 'long',
+        timeStyle: 'short',
+        timeZone: 'America/New_York'
+      }) + ' ET');
+
+      button.disabled = true;
+      button.textContent = 'Sending…';
+      status.style.display = 'block';
+      status.style.color = 'var(--text-muted)';
+      status.textContent = 'Securely sending your prayer request…';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: payload,
+          headers: { Accept: 'application/json' }
+        });
+        const result = await response.json();
+        if (!response.ok || result.success === false) throw new Error('Submission failed');
+
+        status.style.color = 'var(--gold)';
+        status.textContent = 'Thank you. Your request was sent to our prayer team, and we are praying with you.';
+        form.reset();
+      } catch (error) {
+        status.style.color = '#ffb4b4';
+        status.textContent = 'We could not send your request right now. Please try again or call 704-292-6985.';
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Submit Prayer Request';
+      }
     }
 
     // Smooth nav highlight

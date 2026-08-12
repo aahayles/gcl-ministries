@@ -223,6 +223,7 @@
         const title = document.createElement('h3'); title.textContent = item.title;
         const date = document.createElement('p'); date.textContent = `${new Date(item.starts_at).toLocaleString()} – ${new Date(item.ends_at).toLocaleString()}`;
         const location = document.createElement('p'); location.textContent = item.location || 'Location to be announced';
+        const description = document.createElement('p'); description.textContent = item.description || 'No description provided';
         const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'danger'; remove.textContent = 'Delete Event';
         remove.addEventListener('click', async () => {
           if (!window.confirm(`Delete “${item.title}” from the Events page?`)) return;
@@ -232,7 +233,7 @@
           if (item.flyer_path) await supabase.storage.from(EVENT_FLYERS_BUCKET).remove([item.flyer_path]);
           eventMessage.textContent = 'Event deleted.'; await loadEvents();
         });
-        card.append(title, date, location, remove); nextEventList.appendChild(card);
+        card.append(title, date, location, description, remove); nextEventList.appendChild(card);
       });
       if (loadVersion === eventLoadVersion) eventList.replaceChildren(nextEventList);
     }

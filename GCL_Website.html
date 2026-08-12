@@ -845,6 +845,29 @@
       .gallery-control { width: 40px; height: 40px; }
       .nav-wordmark { font-size: 10px; }
     }
+    /* ===== MOBILE UI REFRESH ===== */
+    @media (max-width: 768px) {
+      html { scroll-padding-top: 72px; }
+      body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+      nav { height: 72px; padding: 0 16px; box-shadow: 0 8px 30px rgba(0,0,0,.22); }
+      .nav-logo { gap: 10px; } .nav-logo-badge { width: 44px; height: 44px; } .nav-wordmark { font-size: 10px; letter-spacing: 1px; }
+      .hamburger { width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 10px; background: rgba(209,159,39,.08); }
+      .hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); } .hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; } .hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+      .mobile-menu { top: 72px; max-height: calc(100dvh - 72px); overflow-y: auto; padding: 18px 18px calc(28px + env(safe-area-inset-bottom)); gap: 6px; background: rgba(12,23,48,.98); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+      .mobile-menu a { min-height: 47px; display: flex; align-items: center; padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,.07); border-radius: 7px; font-size: 12px; } .mobile-menu .btn-gold { justify-content: center; color: var(--navy-dark); border: 0; }
+      section { padding: 64px 18px; } .section-title { margin-bottom: 30px; font-size: clamp(32px,10vw,42px); }
+      .hero { min-height: auto; padding: 112px 18px 58px; } .hero-logo { width: 118px; height: 118px; margin-bottom: 24px; } .hero-eyebrow { font-size: 10px; line-height: 1.6; letter-spacing: 2.2px; } .hero h1 { font-size: clamp(40px,12vw,57px); line-height: 1.02; margin-bottom: 18px; } .hero-sub { font-size: 16px; line-height: 1.65; margin-bottom: 30px; } .hero-btns { width: 100%; gap: 11px; } .hero-btns a { width: 100%; min-height: 50px; display: grid; place-items: center; }
+      .service-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 6px 10px; } .service-item { padding: 15px 8px; } .service-item:nth-child(odd) { border-right: 1px solid rgba(19,32,69,.18); } .service-item:nth-child(n+3) { border-top: 1px solid rgba(19,32,69,.18); } .service-val { font-size: 12px; line-height: 1.45; }
+      .welcome-quote { font-size: 25px; line-height: 1.45; } .pillars-grid { border-radius: 12px; overflow: hidden; } .pillar { padding: 30px 24px; } .pillar h3 { font-size: 29px; } .pillar p, .pillar ul li { font-size: 15px; line-height: 1.7; }
+      .values-grid { gap: 14px; } .value-card { padding: 23px 20px; border-radius: 10px; } .value-card p { font-size: 15px; line-height: 1.7; }
+      .pastor-inner { gap: 22px; text-align: center; } .pastor-avatar { width: 112px; height: 112px; margin: auto; } .pastor-name { font-size: 35px; } .pastor-bio { line-height: 1.75; } .pastor-chips { justify-content: center; }
+      .gallery-intro { margin: -10px auto 24px; font-size: 15px; } .gallery-stage { min-height: 230px; aspect-ratio: 4 / 3; border-radius: 12px; } .gallery-control { width: 44px; height: 44px; background: rgba(12,23,48,.9); } .gallery-control.previous { left: 8px; } .gallery-control.next { right: 8px; }
+      form { gap: 18px; } .form-group label { font-size: 11px; } .form-group input, .form-group textarea, .form-group select { min-height: 50px; padding: 14px; border-radius: 8px; font-size: 16px; } .form-group textarea { min-height: 132px; } form .btn-gold { width: 100%; min-height: 50px; }
+      .contact-grid { gap: 38px; } .contact-info { padding: 24px 20px; border: 1px solid rgba(209,159,39,.18); border-radius: 12px; background: rgba(255,255,255,.025); } .contact-info-val { font-size: 20px; overflow-wrap: anywhere; }
+      footer { padding: 50px 20px calc(32px + env(safe-area-inset-bottom)); } .footer-grid { grid-template-columns: 1fr; gap: 30px; padding-bottom: 34px; } .footer-col { padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,.06); } .footer-col p, .footer-col a { min-height: 38px; display: flex; align-items: center; line-height: 1.55; font-size: 14px; }
+      .social-rail { bottom: max(10px,env(safe-area-inset-bottom)); gap: 7px; padding: 7px; } .social-rail-link { width: 44px; height: 44px; }
+    }
+    @media (max-width: 380px) { .nav-wordmark { max-width: 145px; font-size: 9px; } .hero h1 { font-size: 39px; } .service-val { font-size: 11px; } .social-rail-link { width: 40px; height: 40px; } }
   </style>
 </head>
 <body>
@@ -869,7 +892,7 @@
       <li><a href="https://cash.app/$gclministries" target="_blank" rel="noopener noreferrer">Give</a></li>
     </ul>
     <a href="#contact" class="nav-cta">Plan Your Visit</a>
-    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -1223,7 +1246,11 @@
   <script>
     // Mobile menu
     function toggleMenu() {
-      document.getElementById('mobileMenu').classList.toggle('open');
+      const menu = document.getElementById('mobileMenu');
+      const button = document.querySelector('.hamburger');
+      const isOpen = menu.classList.toggle('open');
+      button.setAttribute('aria-expanded', String(isOpen));
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     }
 
     // Scroll animations

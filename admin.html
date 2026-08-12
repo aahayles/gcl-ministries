@@ -92,6 +92,7 @@
           <label>Ends<input id="event-end" type="datetime-local" required></label>
           <label class="wide">Location<input id="event-location" type="text" maxlength="240" placeholder="3000 Melita Ave, Charlotte, NC 28216"></label>
           <label class="wide">Description<textarea id="event-description" maxlength="2000" placeholder="Tell visitors what to expect."></textarea></label>
+          <label class="wide">16:9 event flyer (JPG, PNG, or WebP; 10 MB maximum)<input id="event-flyer" type="file" accept="image/jpeg,image/png,image/webp" required></label>
           <button type="submit">Publish Event</button>
           <p class="message wide" id="event-message" role="status"></p>
         </form>
@@ -102,7 +103,7 @@
     </section>
   </main>
   <script type="module">
-    import { supabase, GALLERY_BUCKET } from './supabase-client.js';
+    import { supabase, GALLERY_BUCKET, EVENT_FLYERS_BUCKET } from './supabase-client.js';
 
     const loginPanel = document.getElementById('login-panel');
     const dashboard = document.getElementById('dashboard');
@@ -134,6 +135,13 @@
       const extension = name.includes('.') ? `.${name.split('.').pop().toLowerCase()}` : '';
       const stem = name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'photo';
       return `${Date.now()}-${crypto.randomUUID()}-${stem}${extension}`;
+    }
+
+    async function isSixteenByNine(file) {
+      const bitmap = await createImageBitmap(file);
+      const ratio = bitmap.width / bitmap.height;
+      bitmap.close();
+      return Math.abs(ratio - (16 / 9)) < 0.02;
     }
 
     async function showSession(session) {
@@ -214,6 +222,7 @@
           remove.disabled = true;
           const { error:deleteError } = await supabase.from('events').delete().eq('id', item.id);
           if (deleteError) { eventMessage.textContent = deleteError.message; remove.disabled = false; return; }
+          if (item.flyer_path) await supabase.storage.from(EVENT_FLYERS_BUCKET).remove([item.flyer_path]);
           eventMessage.textContent = 'Event deleted.'; await loadEvents();
         });
         card.append(title, date, location, remove); eventList.appendChild(card);
@@ -258,15 +267,23 @@
       const startsAt = new Date(document.getElementById('event-start').value);
       const endsAt = new Date(document.getElementById('event-end').value);
       if (!(endsAt > startsAt)) { eventMessage.textContent = 'The ending time must be after the starting time.'; button.disabled = false; return; }
+      const flyer = document.getElementById('event-flyer').files[0];
+      if (!flyer || flyer.size > 10 * 1024 * 1024 || !['image/jpeg','image/png','image/webp'].includes(flyer.type)) { eventMessage.textContent = 'Choose a JPG, PNG, or WebP flyer under 10 MB.'; showNotice(eventMessage.textContent, 'error'); button.disabled = false; return; }
+      if (!(await isSixteenByNine(flyer))) { eventMessage.textContent = 'The flyer must use a 16:9 layout, such as 1920 × 1080 pixels.'; showNotice(eventMessage.textContent, 'error'); button.disabled = false; return; }
+      const flyerPath = safeFileName(flyer.name);
+      const { data:flyerUpload, error:flyerError } = await supabase.storage.from(EVENT_FLYERS_BUCKET).upload(flyerPath, flyer, { cacheControl:'3600', contentType:flyer.type, upsert:false });
+      if (flyerError || !flyerUpload?.path) { eventMessage.textContent = `Flyer upload failed: ${flyerError?.message || 'No backend confirmation received.'}`; showNotice(eventMessage.textContent, 'error'); button.disabled = false; return; }
+      const { data:flyerCheck, error:flyerCheckError } = await supabase.storage.from(EVENT_FLYERS_BUCKET).list('', { limit:10, search:flyerPath });
+      if (flyerCheckError || !flyerCheck?.some(item => item.id && item.name === flyerPath)) { eventMessage.textContent = 'The flyer was not verified on the backend, so the event was not published.'; showNotice(eventMessage.textContent, 'error'); button.disabled = false; return; }
       const { error } = await supabase.from('events').insert({
         title:document.getElementById('event-title').value.trim(),
         description:document.getElementById('event-description').value.trim(),
         location:document.getElementById('event-location').value.trim(),
-        starts_at:startsAt.toISOString(), ends_at:endsAt.toISOString(), is_published:true
+        starts_at:startsAt.toISOString(), ends_at:endsAt.toISOString(), flyer_path:flyerPath, is_published:true
       });
       button.disabled = false;
-      if (error) { eventMessage.textContent = error.message; return; }
-      eventMessage.textContent = 'Event published successfully.'; eventForm.reset(); await loadEvents();
+      if (error) { await supabase.storage.from(EVENT_FLYERS_BUCKET).remove([flyerPath]); eventMessage.textContent = error.message; showNotice(`Event was not published: ${error.message}`, 'error'); return; }
+      eventMessage.textContent = 'Event and flyer uploaded, verified, and published successfully.'; showNotice(eventMessage.textContent, 'success'); eventForm.reset(); await loadEvents();
     });
 
     document.getElementById('sign-out').addEventListener('click', () => endAdminSession('signedout'));

@@ -12,3 +12,4 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 });
 
 export const GALLERY_BUCKET = 'gallery';
+export const EVENT_FLYERS_BUCKET = 'event-flyers';

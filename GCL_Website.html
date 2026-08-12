@@ -94,6 +94,24 @@
 
     .nav-links a:hover { color: var(--gold); }
 
+    a[href="live.html"].is-live {
+      color: #fff !important;
+      background: #d82635;
+      border-radius: 999px;
+      padding: 8px 13px;
+      box-shadow: 0 0 0 rgba(216,38,53,.65);
+      animation: liveBlink 1.15s ease-in-out infinite;
+    }
+
+    a[href="live.html"].is-live::before { content: '●'; margin-right: 7px; font-size: 9px; }
+
+    @keyframes liveBlink {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(216,38,53,.65); }
+      50% { opacity: .68; box-shadow: 0 0 0 7px rgba(216,38,53,0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) { a[href="live.html"].is-live { animation: none; } }
+
     .nav-cta {
       background: var(--gold);
       color: var(--navy-dark);
@@ -1252,6 +1270,19 @@
       button.setAttribute('aria-expanded', String(isOpen));
       document.body.style.overflow = isOpen ? 'hidden' : '';
     }
+
+    async function refreshWatchLiveButtons() {
+      try {
+        const response = await fetch(`live-status.json?t=${Date.now()}`, { cache: 'no-store' });
+        const live = await response.json();
+        document.querySelectorAll('a[href="live.html"]').forEach((link) => link.classList.toggle('is-live', Boolean(live.isLive && live.videoUrl)));
+      } catch {
+        document.querySelectorAll('a[href="live.html"]').forEach((link) => link.classList.remove('is-live'));
+      }
+    }
+
+    refreshWatchLiveButtons();
+    window.setInterval(refreshWatchLiveButtons, 60000);
 
     // Scroll animations
     const observer = new IntersectionObserver((entries) => {

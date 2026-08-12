@@ -56,36 +56,52 @@
         <h2>The livestream is currently offline</h2>
         <p>Please stay on this page. We check Facebook automatically and will refresh the player when the broadcast begins.</p>
       </div>
-      <iframe id="facebook-live-player" title="GCL Ministries Facebook livestream" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
-      <button class="fullscreen-control" id="fullscreen-control" type="button" aria-label="Watch fullscreen" title="Fullscreen">
+      <iframe id="facebook-live-player" title="GCL Ministries Facebook livestream" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen hidden></iframe>
+      <button class="fullscreen-control" id="fullscreen-control" type="button" aria-label="Watch fullscreen" title="Fullscreen" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
       </button>
     </section>
-    <p class="status"><span class="pulse"></span><span id="check-status">LIVE NOW · Streaming from the GCL Facebook page</span></p>
+    <p class="status"><span class="pulse"></span><span id="check-status">OFFLINE · Waiting for the next Facebook livestream</span></p>
     <div class="actions">
       <a class="button primary" href="https://www.facebook.com/godcannotlieministries/live" target="_blank" rel="noopener noreferrer">Open Live on Facebook</a>
       <a class="button" href="index.html#contact">Contact the Ministry</a>
     </div>
   </main>
   <script>
-    const PAGE_LIVE_URL = 'https://www.facebook.com/100064739497462/videos/975041372262547';
     const player = document.getElementById('facebook-live-player');
     const status = document.getElementById('check-status');
     const playerShell = document.querySelector('.player-shell');
+    const fullscreenControl = document.getElementById('fullscreen-control');
 
-    function refreshFacebookPlayer() {
-      status.textContent = 'LIVE NOW · Streaming from the GCL Facebook page';
+    function showLiveVideo(videoUrl) {
       const pluginUrl = new URL('https://www.facebook.com/plugins/video.php');
-      pluginUrl.searchParams.set('href', PAGE_LIVE_URL);
+      pluginUrl.searchParams.set('href', videoUrl);
       pluginUrl.searchParams.set('show_text', 'false');
       pluginUrl.searchParams.set('autoplay', 'true');
       pluginUrl.searchParams.set('allowfullscreen', 'true');
-      pluginUrl.searchParams.set('t', Date.now().toString());
       player.src = pluginUrl.toString();
+      player.hidden = false;
+      fullscreenControl.hidden = false;
+      status.textContent = 'LIVE NOW · Streaming from the GCL Facebook page';
     }
 
-    refreshFacebookPlayer();
-    window.setInterval(refreshFacebookPlayer, 60000);
+    function showOffline() {
+      player.src = 'about:blank';
+      player.hidden = true;
+      fullscreenControl.hidden = true;
+      status.textContent = 'OFFLINE · Waiting for the next Facebook livestream';
+    }
+
+    async function refreshLiveStatus() {
+      try {
+        const response = await fetch(`live-status.json?t=${Date.now()}`, { cache:'no-store' });
+        const live = await response.json();
+        if (live.isLive && live.videoUrl) showLiveVideo(live.videoUrl); else showOffline();
+      } catch { showOffline(); }
+    }
+
+    refreshLiveStatus();
+    window.setInterval(refreshLiveStatus, 60000);
     document.getElementById('fullscreen-control').addEventListener('click', async () => {
       if (document.fullscreenElement) { await document.exitFullscreen(); return; }
       if (playerShell.requestFullscreen) await playerShell.requestFullscreen();

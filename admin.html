@@ -122,6 +122,8 @@
     let inactivityTimer;
     let activeSession = false;
     let noticeTimer;
+    let photoLoadVersion = 0;
+    let eventLoadVersion = 0;
 
     function showNotice(message, type) {
       window.clearTimeout(noticeTimer);
@@ -181,12 +183,14 @@
     }
 
     async function loadPhotos() {
+      const loadVersion = ++photoLoadVersion;
       photoStatus.textContent = 'Loading photos…';
-      photoGrid.replaceChildren();
       const { data, error } = await supabase.storage.from(GALLERY_BUCKET).list('', { limit:100, sortBy:{ column:'created_at', order:'desc' } });
-      if (error) { photoStatus.textContent = error.message; return; }
+      if (loadVersion !== photoLoadVersion) return;
+      if (error) { photoGrid.replaceChildren(); photoStatus.textContent = error.message; return; }
       const photos = data.filter((item) => item.id && !item.name.startsWith('.'));
       photoStatus.textContent = photos.length ? `${photos.length} photo${photos.length === 1 ? '' : 's'} published` : 'No photos published yet.';
+      const nextPhotoGrid = document.createDocumentFragment();
       photos.forEach((photo) => {
         const { data:url } = supabase.storage.from(GALLERY_BUCKET).getPublicUrl(photo.name);
         const card = document.createElement('article'); card.className = 'photo-card';
@@ -201,16 +205,19 @@
           if (deleteError) { uploadMessage.textContent = deleteError.message; remove.disabled = false; return; }
           uploadMessage.textContent = 'Photo deleted.'; await loadPhotos();
         });
-        footer.append(name, remove); card.append(image, footer); photoGrid.appendChild(card);
+        footer.append(name, remove); card.append(image, footer); nextPhotoGrid.appendChild(card);
       });
+      if (loadVersion === photoLoadVersion) photoGrid.replaceChildren(nextPhotoGrid);
     }
 
     async function loadEvents() {
+      const loadVersion = ++eventLoadVersion;
       eventStatus.textContent = 'Loading events…';
-      eventList.replaceChildren();
       const { data, error } = await supabase.from('events').select('*').order('starts_at', { ascending:true });
-      if (error) { eventStatus.textContent = error.message; return; }
+      if (loadVersion !== eventLoadVersion) return;
+      if (error) { eventList.replaceChildren(); eventStatus.textContent = error.message; return; }
       eventStatus.textContent = data.length ? `${data.length} event${data.length === 1 ? '' : 's'} published` : 'No events published yet.';
+      const nextEventList = document.createDocumentFragment();
       data.forEach((item) => {
         const card = document.createElement('article'); card.className = 'event-card';
         const title = document.createElement('h3'); title.textContent = item.title;
@@ -225,8 +232,9 @@
           if (item.flyer_path) await supabase.storage.from(EVENT_FLYERS_BUCKET).remove([item.flyer_path]);
           eventMessage.textContent = 'Event deleted.'; await loadEvents();
         });
-        card.append(title, date, location, remove); eventList.appendChild(card);
+        card.append(title, date, location, remove); nextEventList.appendChild(card);
       });
+      if (loadVersion === eventLoadVersion) eventList.replaceChildren(nextEventList);
     }
 
     loginForm.addEventListener('submit', async (event) => {

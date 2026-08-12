@@ -14,7 +14,7 @@
   <nav><a class="brand" href="index.html"><img src="gcl-logo.png" alt="GCL Ministries"><span>God Cannot Lie<br>Ministries</span></a><a class="back" href="index.html">← Back to Home</a></nav>
   <main><header class="hero"><div class="eyebrow">Gather With Us</div><h1>Upcoming Events</h1><p class="intro">Save an event to Google Calendar or download it for Apple Calendar.</p></header><section class="events" id="events"><div class="empty">Loading upcoming events…</div></section></main>
   <script type="module">
-    import { supabase, EVENT_FLYERS_BUCKET } from './supabase-client.js';
+    import { supabase, EVENT_FLYERS_BUCKET } from './supabase-client.js?v=20260812-events';
     const container = document.getElementById('events');
     const escapeText = (value='') => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
     const compactUtc = value => new Date(value).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
